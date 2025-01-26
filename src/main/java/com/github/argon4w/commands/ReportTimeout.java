@@ -14,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 
-import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,34 +30,33 @@ public final class ReportTimeout {
             return;
         }
 
-        Iterator<UUID> it = REPORTERS.keySet().iterator();
         Set<UUID> offline = new ObjectOpenHashSet<>();
 
-        while (it.hasNext()) {
-            UUID uuid = it.next();
-            Reporter reporter = REPORTERS.get(uuid);
-            int timeout = reporter.getTimeout();
+       for (UUID uuid : REPORTERS.keySet()) {
+           Reporter reporter = REPORTERS.get(uuid);
+           int timeout = reporter.getTimeout();
 
-            if (time >= timeout) {
-                BlockPos blockPos = chunkPos.getWorldPosition();
-                Component teleportComponent = Utils.getTeleportComponent(blockPos);
+           if (time < timeout) {
+               continue;
+           }
 
-                reporter.sendMessage(Component.translatable(
-                        "chunk-monitor.commands.chunk-monitor.report.report",
-                        chunkPos.x,
-                        chunkPos.z,
-                        teleportComponent,
-                        time,
-                        reporter.getTimeout(),
-                        count
-                ).withStyle(ChatFormatting.GOLD));
-            }
+           if (!reporter.isOnline()) {
+               offline.add(uuid);
+               continue;
+           }
 
-            if (reporter.isOnline()) {
-                continue;
-            }
+           BlockPos blockPos = chunkPos.getWorldPosition();
+           Component teleportComponent = Utils.getTeleportComponent(blockPos);
 
-            offline.add(uuid);
+           reporter.sendMessage(Component.translatable(
+                   "chunk-monitor.commands.chunk-monitor.report.report",
+                   chunkPos.x,
+                   chunkPos.z,
+                   teleportComponent,
+                   time,
+                   reporter.getTimeout(),
+                   count
+           ).withStyle(ChatFormatting.GOLD));
         }
 
         if (offline.isEmpty()) {
