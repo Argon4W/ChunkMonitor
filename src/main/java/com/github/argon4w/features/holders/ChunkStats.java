@@ -1,4 +1,4 @@
-package com.github.argon4w.commands;
+package com.github.argon4w.features.holders;
 
 import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ public final class ChunkStats implements Comparable<ChunkStats> {
         this.count = 0;
     }
 
-    public void sample(long time) {
+    public void collect(long time) {
         this.time += time;
         this.count += 1;
     }

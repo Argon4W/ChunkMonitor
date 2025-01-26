@@ -1,7 +1,8 @@
-package com.github.argon4w.commands;
+package com.github.argon4w.features;
 
 import com.github.argon4w.ChunkMonitor;
 import com.github.argon4w.Utils;
+import com.github.argon4w.features.holders.ReportMessageReceiver;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -17,34 +18,38 @@ import net.minecraft.world.level.ChunkPos;
 import java.util.Set;
 import java.util.UUID;
 
-public final class ReportTimeout {
+public final class ReportChunkTimeout {
 
-    private ReportTimeout() {
+    private ReportChunkTimeout() {
 
     }
 
-    public static final Object2ObjectMap<UUID, Reporter> REPORTERS;
+    public static final Object2ObjectMap<UUID, ReportMessageReceiver> RECEIVERS;
 
     static {
-        REPORTERS = new Object2ObjectLinkedOpenHashMap<>();
+        RECEIVERS = new Object2ObjectLinkedOpenHashMap<>();
     }
 
-    public static void report(ChunkPos chunkPos, long time, int count) {
-        if (REPORTERS.isEmpty()) {
+    public static void report(
+            ChunkPos chunkPos,
+            long time,
+            int count
+    ) {
+        if (RECEIVERS.isEmpty()) {
             return;
         }
 
         Set<UUID> offline = new ObjectOpenHashSet<>();
 
-       for (UUID uuid : REPORTERS.keySet()) {
-           Reporter reporter = REPORTERS.get(uuid);
-           int timeout = reporter.getTimeout();
+       for (UUID uuid : RECEIVERS.keySet()) {
+           ReportMessageReceiver receiver = RECEIVERS.get(uuid);
+           int timeout = receiver.getTimeout();
 
            if (time < timeout) {
                continue;
            }
 
-           if (!reporter.isOnline()) {
+           if (!receiver.isOnline()) {
                offline.add(uuid);
                continue;
            }
@@ -52,7 +57,7 @@ public final class ReportTimeout {
            BlockPos blockPos = chunkPos.getWorldPosition();
            Component teleportComponent = Utils.getTeleportComponent(blockPos);
 
-           reporter.sendMessage(Component.translatable(
+           receiver.sendMessage(Component.translatable(
                    "chunk-monitor.commands.chunk-monitor.report.report",
                    chunkPos.x,
                    chunkPos.z,
@@ -68,28 +73,34 @@ public final class ReportTimeout {
         }
 
         for (UUID uuid : offline) {
-            Reporter reporter = REPORTERS.remove(uuid);
-            ChunkMonitor.LOGGER.info("Remove {} from reporters as the player is offline.", reporter
+            ReportMessageReceiver receiver = RECEIVERS.remove(uuid);
+            ChunkMonitor.LOGGER.info("Remove {} from reporters as the player is offline.", receiver
                     .getName()
                     .getString());
         }
     }
 
-    public static int runReportTimeoutWithArgument(CommandContext<CommandSourceStack> context) {
-        return runReportTimeout(
+    public static int runReportChunkTimeoutWithArgument(CommandContext<CommandSourceStack> context) {
+        return runReportChunkTimeout(
                 context.getSource(),
-                IntegerArgumentType.getInteger(context, "timeout")
+                IntegerArgumentType.getInteger(context, "timeout"),
+                false
         );
     }
 
-    public static int runReportTimeout(CommandContext<CommandSourceStack> context) {
-        return runReportTimeout(
+    public static int runReportChunkTimeout(CommandContext<CommandSourceStack> context) {
+        return runReportChunkTimeout(
                 context.getSource(),
-                50
+                50,
+                true
         );
     }
 
-    private static int runReportTimeout(CommandSourceStack source, int timeout) {
+    private static int runReportChunkTimeout(
+            CommandSourceStack source,
+            int timeout,
+            boolean remove
+    ) {
         if (!source.isPlayer()) {
             source.sendFailure(Component
                     .translatable("chunk-monitor.commands.chunk-monitor.report.must-be-player")
@@ -107,42 +118,42 @@ public final class ReportTimeout {
         }
 
         UUID uuid = player.getUUID();
-        Reporter reporter = REPORTERS.get(uuid);
-        Reporter newReporter = new Reporter(
+        ReportMessageReceiver receiver = RECEIVERS.get(uuid);
+        ReportMessageReceiver newReceiver = new ReportMessageReceiver(
                 source,
                 player,
                 timeout
         );
 
-        if (reporter == null) {
-            REPORTERS.put(uuid, newReporter);
+        if (receiver == null) {
+            RECEIVERS.put(uuid, newReceiver);
             source.sendFailure(Component.translatable(
                     "chunk-monitor.commands.chunk-monitor.report.add",
-                    newReporter.getName(),
-                    newReporter.getTimeout()
+                    newReceiver.getName(),
+                    newReceiver.getTimeout()
             ).withStyle(ChatFormatting.GREEN));
 
             return 1;
         }
 
-        if (reporter.getTimeout() != timeout) {
-            REPORTERS.put(uuid, newReporter);
-            reporter.sendMessage(Component.translatable(
+        if (!remove) {
+            RECEIVERS.put(uuid, newReceiver);
+            source.sendSystemMessage(Component.translatable(
                     "chunk-monitor.commands.chunk-monitor.report.update",
-                    reporter.getName(),
-                    reporter.getTimeout(),
-                    newReporter.getTimeout()
+                    receiver.getName(),
+                    receiver.getTimeout(),
+                    newReceiver.getTimeout()
             ).withStyle(ChatFormatting.GREEN));
 
             return 1;
         }
 
-        REPORTERS.remove(uuid);
-        reporter.sendMessage(Component.translatable(
+        RECEIVERS.remove(uuid);
+        source.sendSystemMessage(Component.translatable(
                 "chunk-monitor.commands.chunk-monitor.report.remove",
-                reporter.getName(),
-                reporter.getTimeout()
-        ));
+                receiver.getName(),
+                receiver.getTimeout()
+        ).withStyle(ChatFormatting.GREEN));
 
         return 1;
     }

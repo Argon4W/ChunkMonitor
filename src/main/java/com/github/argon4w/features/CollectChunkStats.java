@@ -1,6 +1,7 @@
-package com.github.argon4w.commands;
+package com.github.argon4w.features;
 
 import com.github.argon4w.Utils;
+import com.github.argon4w.features.holders.ChunkStats;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -17,9 +18,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Locale;
 
-public final class SampleChunkStats {
+public final class CollectChunkStats {
 
-    private SampleChunkStats() {
+    private CollectChunkStats() {
 
     }
 
@@ -35,7 +36,7 @@ public final class SampleChunkStats {
         FORMAT.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
     }
 
-    public static void sampleChunk(ChunkPos chunkPos, long time) {
+    public static void collect(ChunkPos chunkPos, long time) {
         if (!SAMPLE) {
             return;
         }
@@ -47,21 +48,21 @@ public final class SampleChunkStats {
             STATS.put(chunkPos, stats);
         }
 
-        stats.sample(time);
+        stats.collect(time);
     }
 
-    public static int runStatsSample(CommandContext<CommandSourceStack> context) {
+    public static int runCollectChunkStatsCollect(CommandContext<CommandSourceStack> context) {
         SAMPLE = !SAMPLE;
 
         if (SAMPLE) {
             context.getSource().sendSystemMessage(Component
-                    .translatable("chunk-monitor.commands.chunk-monitor.stats.sample.start")
+                    .translatable("chunk-monitor.commands.chunk-monitor.stats.collect.start")
                     .withStyle(ChatFormatting.GREEN));
         }
 
         if (!SAMPLE) {
             context.getSource().sendSystemMessage(Component
-                    .translatable("chunk-monitor.commands.chunk-monitor.stats.sample.stop")
+                    .translatable("chunk-monitor.commands.chunk-monitor.stats.collect.stop")
                     .withStyle(ChatFormatting.GREEN));
 
             STATS.clear();
@@ -70,21 +71,21 @@ public final class SampleChunkStats {
         return 1;
     }
 
-    public static int runStatsWithArgument(CommandContext<CommandSourceStack> context) {
-        return runStats(
+    public static int runCollectChunkStatsWithArgument(CommandContext<CommandSourceStack> context) {
+        return runCollectChunkStats(
                 context.getSource(),
                 IntegerArgumentType.getInteger(context, "count")
         );
     }
 
-    public static int runStats(CommandContext<CommandSourceStack> context) {
-        return runStats(
+    public static int runCollectChunkStats(CommandContext<CommandSourceStack> context) {
+        return runCollectChunkStats(
                 context.getSource(),
                 10
         );
     }
 
-    public static int runStats(CommandSourceStack source, int count) {
+    public static int runCollectChunkStats(CommandSourceStack source, int count) {
         Iterator<ChunkStats> iter = STATS
                 .values()
                 .stream()

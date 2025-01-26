@@ -1,7 +1,7 @@
 package com.github.argon4w;
 
-import com.github.argon4w.commands.ReportTimeout;
-import com.github.argon4w.commands.SampleChunkStats;
+import com.github.argon4w.features.ReportChunkTimeout;
+import com.github.argon4w.features.CollectChunkStats;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -27,16 +27,16 @@ public final class ChunkMonitor implements ModInitializer {
 						.literal("report")
 						.then(Commands
 								.argument("timeout", IntegerArgumentType.integer())
-								.executes(ReportTimeout::runReportTimeoutWithArgument))
-						.executes(ReportTimeout::runReportTimeout))
+								.executes(ReportChunkTimeout::runReportChunkTimeoutWithArgument))
+						.executes(ReportChunkTimeout::runReportChunkTimeout))
 				.then(Commands.literal("stats")
 						.then(Commands
-								.literal("sample")
-								.executes(SampleChunkStats::runStatsSample))
+								.literal("collect")
+								.executes(CollectChunkStats::runCollectChunkStatsCollect))
 						.then(Commands
 								.argument("count", IntegerArgumentType.integer())
-								.executes(SampleChunkStats::runStatsWithArgument))
-						.executes(SampleChunkStats::runStats))
+								.executes(CollectChunkStats::runCollectChunkStatsWithArgument))
+						.executes(CollectChunkStats::runCollectChunkStats))
 		));
 	}
 }

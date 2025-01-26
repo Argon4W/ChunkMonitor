@@ -1,7 +1,7 @@
 package com.github.argon4w.mixin;
 
-import com.github.argon4w.commands.ReportTimeout;
-import com.github.argon4w.commands.SampleChunkStats;
+import com.github.argon4w.features.ReportChunkTimeout;
+import com.github.argon4w.features.CollectChunkStats;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -41,7 +41,7 @@ public class ServerChunkCacheMixin {
         long delta = endTime - time;
         ChunkPos chunkPos = new ChunkPos(x, z);
 
-        SampleChunkStats.sampleChunk(chunkPos, delta);
-        ReportTimeout.report(chunkPos, delta, count);
+        CollectChunkStats.collect(chunkPos, delta);
+        ReportChunkTimeout.report(chunkPos, delta, count);
     }
 }

@@ -1,18 +1,16 @@
-package com.github.argon4w.commands;
+package com.github.argon4w.features.holders;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.function.Supplier;
-
-public final class Reporter {
+public final class ReportMessageReceiver {
 
     private final CommandSourceStack source;
     private final ServerPlayer player;
     private final int timeout;
 
-    public Reporter(
+    public ReportMessageReceiver(
             CommandSourceStack source,
             ServerPlayer player,
             int timeout
@@ -20,16 +18,6 @@ public final class Reporter {
         this.source = source;
         this.player = player;
         this.timeout = timeout;
-    }
-
-    public int sendFailure(Component component) {
-        source.sendFailure(component);
-        return 0;
-    }
-
-    public int sendSuccess(Supplier<Component> component) {
-        source.sendSuccess(component, true);
-        return 1;
     }
 
     public void sendMessage(Component component) {
@@ -63,7 +51,7 @@ public final class Reporter {
             return false;
         }
 
-        return ((Reporter) obj)
+        return ((ReportMessageReceiver) obj)
                 .player
                 .equals(player);
     }
