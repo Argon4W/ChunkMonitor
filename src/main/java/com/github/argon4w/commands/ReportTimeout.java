@@ -23,7 +23,11 @@ public final class ReportTimeout {
 
     }
 
-    public static final Object2ObjectMap<UUID, Reporter> REPORTERS = new Object2ObjectLinkedOpenHashMap<>();
+    public static final Object2ObjectMap<UUID, Reporter> REPORTERS;
+
+    static {
+        REPORTERS = new Object2ObjectLinkedOpenHashMap<>();
+    }
 
     public static void report(ChunkPos chunkPos, long time, int count) {
         if (REPORTERS.isEmpty()) {
@@ -54,7 +58,7 @@ public final class ReportTimeout {
                    chunkPos.z,
                    teleportComponent,
                    time,
-                   reporter.getTimeout(),
+                   timeout,
                    count
            ).withStyle(ChatFormatting.GOLD));
         }

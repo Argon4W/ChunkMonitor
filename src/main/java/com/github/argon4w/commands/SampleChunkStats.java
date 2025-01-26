@@ -6,7 +6,6 @@ import com.mojang.brigadier.context.CommandContext;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -24,9 +23,17 @@ public final class SampleChunkStats {
 
     }
 
-    public static final DecimalFormat FORMAT = Util.make(new DecimalFormat("#.##"), decimalFormat -> decimalFormat.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT)));
-    public static final Object2ObjectMap<ChunkPos, ChunkStats> STATS = new Object2ObjectLinkedOpenHashMap<>();
-    public static boolean SAMPLE = false;
+    public static final DecimalFormat FORMAT;
+    public static final Object2ObjectMap<ChunkPos, ChunkStats> STATS;
+    public static boolean SAMPLE;
+
+    static {
+        FORMAT = new DecimalFormat("#.##");
+        STATS = new Object2ObjectLinkedOpenHashMap<>();
+        SAMPLE = false;
+
+        FORMAT.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
+    }
 
     public static void sampleChunk(ChunkPos chunkPos, long time) {
         if (!SAMPLE) {
