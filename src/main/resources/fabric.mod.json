@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "chunk-monitor",
+	"version": "${version}",
+	"name": "Chunk Monitor",
+	"description": "A fabric mod that monitors the loading time of chunks.",
+	"authors": [
+		"Argon4W"
+	],
+	"contact": {
+		"homepage": "https://github.com/Argon4W",
+		"sources": "https://github.com/Argon4W/ChunkMonitor"
+	},
+	"license": "MIT",
+	"icon": "assets/chunk-monitor/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.github.argon4w.ChunkMonitor"
+		]
+	},
+	"mixins": [
+		"chunk-monitor.mixins.json"
+	],
+	"accessWidener": "chunk-monitor.accesswidener",
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+
+	}
+}

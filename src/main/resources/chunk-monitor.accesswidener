@@ -1,0 +1,4 @@
+accessWidener v2 named
+
+accessible class net/minecraft/server/level/ServerChunkCache$MainThreadExecutor
+accessible field net/minecraft/util/thread/BlockableEventLoop blockingCount I

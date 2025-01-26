@@ -1,0 +1,12 @@
+{
+  "chunk-monitor.commands.chunk-monitor.report.must-be-player": "命令发出者须为玩家.",
+  "chunk-monitor.commands.chunk-monitor.report.internal-error": "内部错误.",
+  "chunk-monitor.commands.chunk-monitor.report.remove": "将%s从回报超过%sms毫秒的区块加载中移除",
+  "chunk-monitor.commands.chunk-monitor.report.update": "将%s从回报超过%sms毫秒的区块加载中更新至回报超过%sms的区块加载",
+  "chunk-monitor.commands.chunk-monitor.report.report": "区块 [%s, %s] (%s) 加载用时%dms, 超出设定的时间%sms, 在加载区块前有%s个区块待完成加载",
+  "chunk-monitor.commands.chunk-monitor.report.add": "将%s加入到回报超过%sms毫秒的区块加载中",
+  "chunk-monitor.commands.chunk-monitor.stats.info": "加载时间最长的前%s个区块:",
+  "chunk-monitor.commands.chunk-monitor.stats.chunk": "区块 [%s, %s] (%s); 总计时间: %ss; 加载次数: %s, 平均时间: %ss.",
+  "chunk-monitor.commands.chunk-monitor.stats.sample.start": "开始采样区块加载时间.",
+  "chunk-monitor.commands.chunk-monitor.stats.sample.stop": "停止采样区块加载时间."
+}
