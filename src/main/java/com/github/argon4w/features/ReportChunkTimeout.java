@@ -74,7 +74,7 @@ public final class ReportChunkTimeout {
 
         for (UUID uuid : offline) {
             ReportMessageReceiver receiver = RECEIVERS.remove(uuid);
-            ChunkMonitor.LOGGER.info("Remove {} from reporters as the player is offline.", receiver
+            ChunkMonitor.LOGGER.info("Remove {} from receivers as the player is offline.", receiver
                     .getName()
                     .getString());
         }
