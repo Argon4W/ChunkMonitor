@@ -1,16 +1,14 @@
 package com.github.argon4w.features;
 
-import com.github.argon4w.Utils;
 import com.github.argon4w.features.holders.ChunkStats;
+import com.github.argon4w.features.holders.WorldChunkPos;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.ChunkPos;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -25,7 +23,7 @@ public final class CollectChunkStats {
     }
 
     public static final DecimalFormat FORMAT;
-    public static final Object2ObjectMap<ChunkPos, ChunkStats> STATS;
+    public static final Object2ObjectMap<WorldChunkPos, ChunkStats> STATS;
     public static boolean SAMPLE;
 
     static {
@@ -36,7 +34,7 @@ public final class CollectChunkStats {
         FORMAT.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
     }
 
-    public static void collect(ChunkPos chunkPos, long time) {
+    public static void collect(WorldChunkPos chunkPos, long time) {
         if (!SAMPLE) {
             return;
         }
@@ -86,6 +84,7 @@ public final class CollectChunkStats {
     }
 
     public static int runCollectChunkStats(CommandSourceStack source, int count) {
+        int size = STATS.size();
         Iterator<ChunkStats> iter = STATS
                 .values()
                 .stream()
@@ -93,26 +92,25 @@ public final class CollectChunkStats {
                 .iterator();
 
         source.sendSystemMessage(Component
-                .translatable("chunk-monitor.commands.chunk-monitor.stats.info", count)
-                .withStyle(ChatFormatting.GOLD));
+                .translatable(
+                        "chunk-monitor.commands.chunk-monitor.stats.info",
+                        count,
+                        size
+                ).withStyle(ChatFormatting.GOLD));
 
         while (iter.hasNext() && -- count > 0) {
             ChunkStats stats = iter.next();
-            ChunkPos chunkPos = stats.getChunkPos();
-            BlockPos blockPos = chunkPos.getWorldPosition();
-            Component teleportComponent = Utils.getTeleportComponent(blockPos);
-            double time = stats.getTimeSeconds();
+            Component component = stats.getChunkPos().getComponent();
+            String time = FORMAT.format(stats.getTimeSeconds());
+            String average = FORMAT.format(stats.getAverageSeconds());
             int count1 = stats.getCount();
-            double average = stats.getAverageSeconds();
 
             source.sendSystemMessage(Component.translatable(
                     "chunk-monitor.commands.chunk-monitor.stats.chunk",
-                    chunkPos.x,
-                    chunkPos.z,
-                    teleportComponent,
-                    FORMAT.format(time),
+                    component,
+                    time,
                     count1,
-                    FORMAT.format(average)
+                    average
             ).withStyle(ChatFormatting.GOLD));
         }
 

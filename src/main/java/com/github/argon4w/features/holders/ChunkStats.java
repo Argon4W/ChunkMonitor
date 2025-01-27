@@ -1,16 +1,15 @@
 package com.github.argon4w.features.holders;
 
-import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.NotNull;
 
 public final class ChunkStats implements Comparable<ChunkStats> {
 
-    private final ChunkPos chunkPos;
+    private final WorldChunkPos chunkPos;
 
     private long time;
     private int count;
 
-    public ChunkStats(ChunkPos chunkPos) {
+    public ChunkStats(WorldChunkPos chunkPos) {
         this.chunkPos = chunkPos;
         this.time = 0L;
         this.count = 0;
@@ -29,7 +28,7 @@ public final class ChunkStats implements Comparable<ChunkStats> {
         return getTimeSeconds() / count;
     }
 
-    public ChunkPos getChunkPos() {
+    public WorldChunkPos getChunkPos() {
         return chunkPos;
     }
 

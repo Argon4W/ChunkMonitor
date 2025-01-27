@@ -3,10 +3,12 @@
   "chunk-monitor.commands.chunk-monitor.report.internal-error": "Internal error.",
   "chunk-monitor.commands.chunk-monitor.report.remove": "Stop sending %s reports of chunk loadings that exceeds %sms.",
   "chunk-monitor.commands.chunk-monitor.report.update": "Update %s's chunk loading report timeout from %sms to %sms.",
-  "chunk-monitor.commands.chunk-monitor.report.report": "Chunk [%s, %s] (%s) loaded using %dms, which exceeds timeout of %sms, %s chunk loadings awaits ahead of this chunk loading.",
+  "chunk-monitor.commands.chunk-monitor.report.report": "%s loaded using %dms, which exceeds timeout of %sms, %s chunk loadings awaits ahead of this chunk loading.",
   "chunk-monitor.commands.chunk-monitor.report.add": "Start sending %s reports of chunk loadings that exceeds %sms.",
-  "chunk-monitor.commands.chunk-monitor.stats.info": "Top %s chunks with the longest loading time: ",
-  "chunk-monitor.commands.chunk-monitor.stats.chunk": "Chunk [%s, %s] (%s); Total time: %ss; Load count: %s, Average time: %ss.",
+  "chunk-monitor.commands.chunk-monitor.stats.info": "Top %s chunks with the longest loading time (%s chunks collected): ",
+  "chunk-monitor.commands.chunk-monitor.stats.chunk": "%s; Total time: %ss; Load count: %s, Average time: %ss.",
   "chunk-monitor.commands.chunk-monitor.stats.collect.start": "Start sampling chunk loading time.",
-  "chunk-monitor.commands.chunk-monitor.stats.collect.stop": "Stop sampling chunk loading time."
+  "chunk-monitor.commands.chunk-monitor.stats.collect.stop": "Stop sampling chunk loading time.",
+  "chunk-monitor.chat.chunks": "Chunk [%s, %s]",
+  "chunk-monitor.chat.chunks.tooltip": "In world \"%s\", click to teleport"
 }

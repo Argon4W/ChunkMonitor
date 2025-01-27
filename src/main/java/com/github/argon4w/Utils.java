@@ -20,7 +20,7 @@ public final class Utils {
                 "~",
                 blockPos.getZ())
         ).withStyle(style -> style.withColor(ChatFormatting.GREEN)
-                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + blockPos.getX() + " " + "~" + " " + blockPos.getZ()))
+                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s %d ~ %d".formatted(blockPos.getX(), blockPos.getZ())))
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("chat.coordinates.tooltip")))
         );
     }

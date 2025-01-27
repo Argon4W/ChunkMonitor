@@ -1,8 +1,8 @@
 package com.github.argon4w.features;
 
 import com.github.argon4w.ChunkMonitor;
-import com.github.argon4w.Utils;
 import com.github.argon4w.features.holders.ReportMessageReceiver;
+import com.github.argon4w.features.holders.WorldChunkPos;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -10,10 +10,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.ChunkPos;
 
 import java.util.Set;
 import java.util.UUID;
@@ -31,7 +29,7 @@ public final class ReportChunkTimeout {
     }
 
     public static void report(
-            ChunkPos chunkPos,
+            WorldChunkPos chunkPos,
             long time,
             int count
     ) {
@@ -45,23 +43,18 @@ public final class ReportChunkTimeout {
            ReportMessageReceiver receiver = RECEIVERS.get(uuid);
            int timeout = receiver.getTimeout();
 
-           if (time < timeout) {
-               continue;
-           }
-
            if (!receiver.isOnline()) {
                offline.add(uuid);
                continue;
            }
 
-           BlockPos blockPos = chunkPos.getWorldPosition();
-           Component teleportComponent = Utils.getTeleportComponent(blockPos);
+           if (time < timeout) {
+               continue;
+           }
 
            receiver.sendMessage(Component.translatable(
                    "chunk-monitor.commands.chunk-monitor.report.report",
-                   chunkPos.x,
-                   chunkPos.z,
-                   teleportComponent,
+                   chunkPos.getComponent(),
                    time,
                    timeout,
                    count

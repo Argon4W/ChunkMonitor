@@ -1,7 +1,7 @@
 package com.github.argon4w;
 
-import com.github.argon4w.features.ReportChunkTimeout;
 import com.github.argon4w.features.CollectChunkStats;
+import com.github.argon4w.features.ReportChunkTimeout;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;

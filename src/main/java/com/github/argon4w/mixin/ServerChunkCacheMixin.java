@@ -1,20 +1,25 @@
 package com.github.argon4w.mixin;
 
-import com.github.argon4w.features.ReportChunkTimeout;
 import com.github.argon4w.features.CollectChunkStats;
+import com.github.argon4w.features.ReportChunkTimeout;
+import com.github.argon4w.features.holders.WorldChunkPos;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.server.level.ServerChunkCache;
-import net.minecraft.world.level.ChunkPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.ChunkStatus;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.function.BooleanSupplier;
 
 @Mixin(value = ServerChunkCache.class, priority = Integer.MIN_VALUE)
 public class ServerChunkCacheMixin {
+
+    @Shadow @Final ServerLevel level;
 
     @WrapOperation(
             method = {"getChunkFuture", "getChunk"},
@@ -39,7 +44,7 @@ public class ServerChunkCacheMixin {
 
         long endTime = System.currentTimeMillis();
         long delta = endTime - time;
-        ChunkPos chunkPos = new ChunkPos(x, z);
+        WorldChunkPos chunkPos = new WorldChunkPos(level, x, z);
 
         CollectChunkStats.collect(chunkPos, delta);
         ReportChunkTimeout.report(chunkPos, delta, count);
