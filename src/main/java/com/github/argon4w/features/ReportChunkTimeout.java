@@ -113,7 +113,6 @@ public final class ReportChunkTimeout {
         UUID uuid = player.getUUID();
         ReportMessageReceiver receiver = RECEIVERS.get(uuid);
         ReportMessageReceiver newReceiver = new ReportMessageReceiver(
-                source,
                 player,
                 timeout
         );
